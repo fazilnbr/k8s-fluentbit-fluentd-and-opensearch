@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opensearch-dashboards
+  namespace: logging
+  labels:
+    app: opensearch-dashboards
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch-dashboards
+  template:
+    metadata:
+      labels:
+        app: opensearch-dashboards
+    spec:
+      containers:
+        - name: dashboards
+          image: opensearchproject/opensearch-dashboards:2.12.0
+          ports:
+            - containerPort: 5601
+          env:
+            - name: OPENSEARCH_HOSTS
+              value: '["https://opensearch.logging.svc.cluster.local:9200"]'
+            
+            - name: OPENSEARCH_USERNAME
+              value: admin
+            
+            - name: OPENSEARCH_PASSWORD
+              value: "Z9!kR#4M@pW7eT2x" ## add to secret and read from secret
+            
+            - name: OPENSEARCH_SSL_VERIFICATIONMODE
+              value: none
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+
+

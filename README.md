@@ -1,1 +1,1 @@
-# k8s-fluentbit-opensearch
+# k8s-fluentbit-fluentd-and-opensearch

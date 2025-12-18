@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opensearch
+  namespace: logging
+  labels:
+    app: opensearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch
+  template:
+    metadata:
+      labels:
+        app: opensearch
+    spec:
+      containers:
+        - name: opensearch
+          image: opensearchproject/opensearch:2.12.0
+          ports:
+            - containerPort: 9200
+            - containerPort: 9600
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+              value: "Z9!kR#4M@pW7eT2x"
+            - name: plugins.security.disabled
+              value: "false"
+            - name: plugins.security.allow_unsafe_democertificates
+              value: "true"
+            - name: plugins.security.allow_default_init_securityindex
+              value: "true"
+            - name: plugins.security.authcz.admin_dn
+              value: '["CN=kirk,OU=client,O=client,L=test,C=de"]'
+            - name: plugins.security.nodes_dn
+              value: '["CN=opensearch-node"]'
+            - name: OPENSEARCH_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "200m"
